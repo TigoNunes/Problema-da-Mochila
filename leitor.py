@@ -4,8 +4,7 @@ class Leitor:
             dados = arquivo.read()
             t = dados.split(", ")
             self.teste = []
-            try:
-                for letra in t:
-                    self.teste.append(int(letra))
-            except:
-                pass
+            
+            for letra in t:
+                self.teste.append(letra)
+            
