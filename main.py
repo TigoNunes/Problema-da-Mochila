@@ -6,9 +6,33 @@ import matplotlib.pyplot as plt #lib para plotar os gráficos -> sudo apt instal
 import copy
 
 sys.setrecursionlimit(10**6)
+def Guloso(objetos, capacidade):
+    # Ordena a lista de objetos com base na razão valor/peso em ordem decrescente.
+    objetos.sort(key=lambda x: x[0]/x[1], reverse=True)
 
-def Guloso(objetos, peso):
-    pass
+    # Inicializa o valor total da mochila e uma lista para armazenar os itens selecionados.
+    valor_total = 0.0
+    mochila = []
+
+    # Loop pelos objetos ordenados.
+    for obj in objetos:
+        # Desempacota os valores do objeto (valor, peso).
+        valor, peso = obj
+        # Se o peso do objeto for menor ou igual à capacidade restante da mochila.
+        if peso <= capacidade:
+            # Adiciona o objeto inteiro à mochila.
+            capacidade -= peso
+            valor_total += valor
+            mochila.append((valor, peso))
+        else:
+            # Adiciona uma fração do objeto à mochila.
+            fracao = capacidade / peso
+            valor_total += valor * fracao
+            mochila.append((valor * fracao, capacidade))
+            # Sai do loop, pois a capacidade foi totalmente utilizada.
+            break
+    return valor_total, mochila
+
 
 def Dinamico(objetos, peso):
     mochila = [0] * peso
@@ -31,16 +55,18 @@ def main():
     peso = int(teste.pop(-1))
     objetos = [eval(ob) for ob in teste]
     
+    
     #Rodando e pegando metricas do guloso
     times = []
     memories = []
     for i in range(0, 5):
         startGuloso = time.time()
         tracemalloc.start()
-        print(Guloso(objetos, peso + 1))
+        valor_total, mochila = Guloso(objetos, peso + 1)
+        endGuloso = time.time_ns()
+        print("Valor Total da Mochila:", valor_total)
         _, peak = tracemalloc.get_traced_memory() #current and peak
         tracemalloc.stop()
-        endGuloso = time.time()
         times.append(endGuloso - startGuloso)
         memories.append((peak/(10**6)))
 
