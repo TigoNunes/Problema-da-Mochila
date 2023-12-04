@@ -45,9 +45,27 @@ def Dinamico(objetos, peso):
                 if mochila_anterior[j] < mochila_anterior[j - peso_objeto] + objetos[i][0]:
                     mochila[j] = mochila_anterior[j - peso_objeto] + objetos[i][0]
                     leva[j][i] = 1
+    
+    objetos_levados = []
+
+    for i in range(peso - 1, -1, -1):
+        cont = len(objetos) - 1
+        for j in range(len(objetos) - 1, -1, -1):
+            if leva[i][j] == 1:
+                if objetos_levados.count(objetos[j]) <= 0:
+                    objetos_levados.append(objetos[j])
+                    i = i - objetos[j][1]
+                    break
+                else:
+                    cont -= 1
+            else:
+                cont -= 1
+                pass
+        if not cont > 0:
+            break
                     
     
-    return mochila
+    return objetos_levados, mochila
 
 def main():
     menu = Menu()
