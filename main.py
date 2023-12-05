@@ -3,7 +3,6 @@ from menu import Menu
 import tracemalloc #lib para metrificar memoria
 import time #lib para métrificar o tempo
 import matplotlib.pyplot as plt #lib para plotar os gráficos -> sudo apt install python3-pip -> pip install Matplotlib 
-import copy
 
 sys.setrecursionlimit(10**6)
 def Guloso(objetos, capacidade):
