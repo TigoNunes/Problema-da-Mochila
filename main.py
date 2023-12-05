@@ -64,7 +64,7 @@ def Dinamico(objetos, peso):
             break
                     
     
-    return objetos_levados, mochila[peso - 1]
+    return mochila[peso - 1]
 
 def main():
     menu = Menu()
@@ -77,7 +77,7 @@ def main():
     times = []
     memories = []
     for i in range(0, 5):
-        startGuloso = time.time()
+        startGuloso = time.time_ns()
         tracemalloc.start()
         valor_total, mochila = Guloso(objetos, peso + 1)
         endGuloso = time.time_ns()
@@ -98,11 +98,11 @@ def main():
     times = []
     memories = []
     for i in range(0, 5):
-        startdinamico = time.time()
+        startdinamico = time.time_ns()
         tracemalloc.start()
-        mochila, valor_total = Dinamico(objetos, peso + 1)
+        valor_total = Dinamico(objetos, peso + 1)
         enddinamico = time.time_ns()
-        print(f"Itens na mochila: {mochila}\nValor na mochila: {valor_total}")
+        print(f"Valor na mochila: {valor_total}")
         _, peak = tracemalloc.get_traced_memory() #current and peak
         tracemalloc.stop()        
         times.append(enddinamico - startdinamico)
