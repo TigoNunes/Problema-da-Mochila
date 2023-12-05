@@ -38,7 +38,7 @@ def Dinamico(objetos, peso):
     mochila = [0] * peso
     leva = [[0] * len(objetos) for _ in range(peso)]
     for i in range(0, len(objetos)):
-        mochila_anterior = copy.deepcopy(mochila)
+        mochila_anterior = mochila[:]
         peso_objeto = objetos[i][1]
         for j in range(0, peso):
             if j >= peso_objeto:
@@ -65,7 +65,7 @@ def Dinamico(objetos, peso):
             break
                     
     
-    return objetos_levados, mochila
+    return objetos_levados, mochila[peso - 1]
 
 def main():
     menu = Menu()
@@ -101,10 +101,11 @@ def main():
     for i in range(0, 5):
         startdinamico = time.time()
         tracemalloc.start()
-        print(Dinamico(objetos, peso + 1))
+        mochila, valor_total = Dinamico(objetos, peso + 1)
+        enddinamico = time.time_ns()
+        print(f"Itens na mochila: {mochila}\nValor na mochila: {valor_total}")
         _, peak = tracemalloc.get_traced_memory() #current and peak
-        tracemalloc.stop()
-        enddinamico = time.time()
+        tracemalloc.stop()        
         times.append(enddinamico - startdinamico)
         memories.append((peak/(10**6)))
 
@@ -115,12 +116,13 @@ def main():
     tempo_medio_dinamico = (sum(times)/len(times))
     maior_memoria_dinamico = memories[-1]
     memoria_media_dinamico = (sum(memories)/len(memories))
-    
+    print(f"maior_tempo_dinamico: {maior_tempo_dinamico}\ntempo_medio_dinamico: {tempo_medio_dinamico}\nmaior_memoria_dinamico: {maior_memoria_dinamico}\nmemoria_media_dinamico: {memoria_media_dinamico}")
+    print(f"maior_tempo_guloso: {maior_tempo_guloso}\ntempo_medio_guloso: {tempo_medio_guloso}\nmaior_memoria_guloso: {maior_memoria_guloso}\nmemoria_media_guloso: {memoria_media_guloso}")
     categorias = ['Guloso', 'Dinamico']
     valores = [tempo_medio_guloso, tempo_medio_dinamico]
     plt.bar(categorias, valores)
     plt.xlabel('Funções')
-    plt.ylabel('Tempos')
+    plt.ylabel('Tempos (s)')
     plt.title('Tempos Médios')
     plt.show()
 
@@ -128,7 +130,7 @@ def main():
     valores = [maior_tempo_guloso, maior_tempo_dinamico]
     plt.bar(categorias, valores)
     plt.xlabel('Funções')
-    plt.ylabel('Tempos')
+    plt.ylabel('Tempos (s)')
     plt.title('Maiores tempos')
     plt.show()
     
@@ -136,7 +138,7 @@ def main():
     valores = [memoria_media_guloso,memoria_media_dinamico]
     plt.bar(categorias, valores)
     plt.xlabel('Funções')
-    plt.ylabel('Gasto de Memória')
+    plt.ylabel('Gasto de Memória (MB)')
     plt.title('Memória alocada Média')
     plt.show()
 
@@ -144,7 +146,7 @@ def main():
     valores = [maior_memoria_guloso, maior_memoria_dinamico]
     plt.bar(categorias, valores)
     plt.xlabel('Funções')
-    plt.ylabel('Gasto de Memória')
+    plt.ylabel('Gasto de Memória (MB)')
     plt.title('Memória mais altas alocada')
     plt.show()
 
